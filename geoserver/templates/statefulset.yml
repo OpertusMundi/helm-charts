@@ -86,12 +86,13 @@ spec:
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+      {{- end }}{{/* with .Values.tolerations */}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- if (and .Values.datastore.postgis.enabled .Values.podAffinityPrefs.postgis) }}
+      {{- end }}{{/* with .Values.nodeSelector */}}
+      {{- with .Values.datastore.postgis }}
+      {{- if (and .enabled .affinityPref) }}
       affinity:
         podAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -99,7 +100,10 @@ spec:
             podAffinityTerm:
               topologyKey: kubernetes.io/hostname
               labelSelector:
-                matchLabels: {{ include "postgresql-cluster.selectorLabelsForMaster" . | nindent 18 }}
-      {{- end }}{{/*if*/}}
+                matchLabels:
+                  {{/* https://stackoverflow.com/questions/47791971/how-can-you-call-a-helm-helper-template-from-a-subchart-with-the-correct-conte */}}
+                  {{- include "postgresql-cluster.selectorLabelsForMaster" (index $.Subcharts "postgresql-cluster") | nindent 18 }}
+      {{- end }}{{/* if enabled */}}
+      {{- end }}{{/* with .Values.datastore.postgis */}}
       restartPolicy: Always
       terminationGracePeriodSeconds: 30

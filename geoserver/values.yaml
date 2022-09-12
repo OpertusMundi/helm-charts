@@ -59,9 +59,7 @@ resources:
 datastore:
   postgis:
     enabled: true
-
-podAffinityPrefs:
-  postgis: true
+    affinityPref: true
 
 
 #
