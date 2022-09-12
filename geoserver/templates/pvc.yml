@@ -1,0 +1,44 @@
+# vim: set filetype=helm:
+
+{{- $fullname := (include "geoserver.fullname" .) -}}
+
+{{- with .Values.persistence.dataDir }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $fullname }}-geoserver-data
+spec:
+  accessModes:
+  - {{ .accessMode }}
+  resources:
+    requests:
+      storage: {{ .size }}
+  storageClassName: {{ .storageClassName }}
+  volumeMode: Filesystem
+  selector:
+    matchLabels:
+      {{- include "geoserver.selectorLabels" $ | nindent 6 }}  
+      {{- if .extraMatchLabels }}{{ toYaml .extraMatchLabels | nindent 6 }}{{- end }}
+{{- end }}{{/* with .Values.persistence.dataDir */}}
+
+---
+
+{{- with .Values.persistence.geowebcacheCacheDir }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $fullname }}-geowebcache-cache
+spec:
+  accessModes:
+  - {{ .accessMode }}
+  resources:
+    requests:
+      storage: {{ .size }}
+  storageClassName: {{ .storageClassName }}
+  volumeMode: Filesystem
+  selector:
+    matchLabels:
+      {{- include "geoserver.selectorLabels" $ | nindent 6 }}  
+      {{- if .extraMatchLabels }}{{ toYaml .extraMatchLabels | nindent 6 }}{{- end }}
+{{- end }}{{/* with .Values.persistence.geowebcacheCacheDir */}}
+

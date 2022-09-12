@@ -1,0 +1,21 @@
+# vim: set filetype=helm:
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "geoserver.fullname" . }}-test-connection"
+  labels:
+    {{- include "geoserver.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox:1
+      command: 
+      - 'wget'
+      args:
+       - -T
+       - '5'
+       - '{{ include "geoserver.fullname" . }}-proxy:8080'
+  restartPolicy: Never

@@ -1,0 +1,105 @@
+# vim: set filetype=helm:
+
+{{- $fullname := (include "geoserver.fullname" .) -}}
+{{- $serviceName := (include "geoserver.serviceName" .) -}}
+
+# manifests
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "geoserver.fullname" . }}
+  labels:
+    {{- include "geoserver.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  serviceName: {{ $serviceName }}
+  selector:
+    matchLabels:
+      {{- include "geoserver.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "geoserver.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "geoserver.serviceAccountName" . }}
+      securityContext:
+        # change ownership to GID of geoserverusers
+        fsGroup: {{ .Values.podSecurityContext.gid }}
+        fsGroupChangePolicy: OnRootMismatch
+      volumes:        
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ $fullname }}-geoserver-data
+      - name: geowebcache
+        persistentVolumeClaim:
+          claimName: {{ $fullname }}-geowebcache-cache
+      - name: admin-password
+        secret:
+          secretName: {{ include "geoserver.adminPassword.secretName" . }}
+          defaultMode: 0640
+      containers:
+      - name: geoserver
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: GEOSERVER_DATA_DIR 
+          value: /var/lib/geoserver/data
+        - name: GEOWEBCACHE_CACHE_DIR 
+          value: /var/lib/geoserver/geowebcache-cache
+        - name: INITIAL_MEMORY
+          value: 1024m
+        - name: MAXIMUM_MEMORY
+          value: {{ include "geoserver.maxHeapMemory" . }}
+        - name: GEOSERVER_ADMIN_USER 
+          value: admin
+        - name: GEOSERVER_ADMIN_PASSWORD_FILE
+          value: /secrets/admin-password/password
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/geoserver/data
+        - name: geowebcache
+          mountPath: /var/lib/geoserver/geowebcache-cache
+        - name: admin-password
+          mountPath: /secrets/admin-password
+        ports:
+        - name: http-alt
+          containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          initialDelaySeconds: 15
+          httpGet:
+            path: /geoserver/web/
+            port: http-alt
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if (and .Values.datastore.postgis.enabled .Values.podAffinityPrefs.postgis) }}
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels: {{ include "postgresql-cluster.selectorLabelsForMaster" . | nindent 18 }}
+      {{- end }}{{/*if*/}}
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
