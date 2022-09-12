@@ -1,6 +1,6 @@
 dependencies:
 - name: postgresql-cluster
   repository: file://../postgresql-cluster
-  version: 0.1.0
-digest: sha256:0f114903b29467b323163683ca4e448af3bca21969f794c3c692eef0ff6b55a0
-generated: "2022-09-12T15:36:17.539104615+03:00"
+  version: 0.2.0
+digest: sha256:d6b318cf618116be2761ae930026798fdf725278cf6e82b46cb0fb4de23235f2
+generated: "2022-09-12T19:31:41.053219849+03:00"
