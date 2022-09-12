@@ -1,0 +1,79 @@
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+replicaCount: 1
+
+nodeSelector: {}
+
+tolerations: []
+
+image:
+  repository: kartoza/geoserver
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "2.18.0"
+
+serviceName:
+
+persistence:
+  dataDir:
+    storageClassName: nfs-1
+    accessMode: ReadWriteMany
+    size: 1Gi
+    extraMatchLabels: {}
+  geowebcacheCacheDir:
+    storageClassName: nfs-1
+    accessMode: ReadWriteMany
+    size: 4Gi
+    extraMatchLabels: {}
+
+
+adminPassword:
+  secretName:
+
+imagePullSecrets: []
+
+podAnnotations: {}
+
+podSecurityContext:
+  gid: 10001
+
+resources:
+  limits:
+    cpu: 2500m
+    memory: 3072Mi
+  requests:
+    cpu: 1500m
+    memory: 2048Mi
+
+datastore:
+  postgis:
+    enabled: true
+    affinityPref: true
+
+
+#
+# Subchart "postgresql-cluster"
+#
+postgresql-cluster:
+  nameOverride: postgis
+  serviceAccount:
+    create: false
+  postgres:
+    image: 'postgis/postgis:10-3.0-alpine'
+    replicas: 1
+    replicasToSync: 1
+  pgpool:
+    enabled: false
+
+
