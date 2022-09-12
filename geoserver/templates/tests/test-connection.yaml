@@ -7,7 +7,7 @@ metadata:
   labels:
     {{- include "geoserver.labels" . | nindent 4 }}
   annotations:
-    "helm.sh/hook": test
+    helm.sh/hook: test
 spec:
   containers:
     - name: wget
@@ -15,7 +15,8 @@ spec:
       command: 
       - 'wget'
       args:
-       - -T
-       - '5'
-       - '{{ include "geoserver.fullname" . }}-proxy:8080'
+      - '-O-'
+      - '-T'
+      - '5'
+      - '{{ include "geoserver.fullname" . }}-web:8080/geoserver/'
   restartPolicy: Never
