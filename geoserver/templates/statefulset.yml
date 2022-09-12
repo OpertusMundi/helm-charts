@@ -8,7 +8,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "geoserver.fullname" . }}
+  name: {{ $fullname }}
   labels:
     {{- include "geoserver.labels" . | nindent 4 }}
 spec:
@@ -102,7 +102,7 @@ spec:
               labelSelector:
                 matchLabels:
                   {{/* https://stackoverflow.com/questions/47791971/how-can-you-call-a-helm-helper-template-from-a-subchart-with-the-correct-conte */}}
-                  {{- include "postgresql-cluster.selectorLabelsForMaster" (index $.Subcharts "postgresql-cluster") | nindent 18 }}
+                  {{- include "postgresql-cluster.selectorLabelsForMaster" (get $.Subcharts "postgresql-cluster") | nindent 18 }}
       {{- end }}{{/* if enabled */}}
       {{- end }}{{/* with .Values.datastore.postgis */}}
       restartPolicy: Always
