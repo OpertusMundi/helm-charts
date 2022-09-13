@@ -44,6 +44,16 @@ app.kubernetes.io/name: {{ include "geoserver.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
+{{- define "geoserver.selectorLabelsForServer" -}}
+{{ include "geoserver.selectorLabels" . }}
+app.kubernetes.io/component: server
+{{- end }}
+
+{{- define "geoserver.selectorLabelsForCommandLine" -}}
+{{ include "geoserver.selectorLabels" . }}
+app.kubernetes.io/component: cli
+{{- end }}
+
 {{/*Create the name of the service account to use*/}}
 {{- define "geoserver.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}

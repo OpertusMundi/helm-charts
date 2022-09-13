@@ -61,6 +61,13 @@ datastore:
     enabled: true
     affinityPref: true
 
+# Create a command-line Pod with curl
+curl:
+  create: true
+  image: 'curlimages/curl:7.75.0'
+  userDir: /home/curl_user
+  userName: curl_user
+  gid: 101
 
 #
 # Subchart "postgresql-cluster"

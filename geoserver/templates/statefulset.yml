@@ -16,7 +16,7 @@ spec:
   serviceName: {{ $serviceName }}
   selector:
     matchLabels:
-      {{- include "geoserver.selectorLabels" . | nindent 6 }}
+      {{- include "geoserver.selectorLabelsForServer" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -24,7 +24,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "geoserver.selectorLabels" . | nindent 8 }}
+        {{- include "geoserver.selectorLabelsForServer" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

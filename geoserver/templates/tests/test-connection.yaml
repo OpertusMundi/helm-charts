@@ -18,7 +18,7 @@ metadata:
 spec:
   containers:
   - name: curl
-    image: curlimages/curl:7.75.0
+    image: {{ .Values.curl.image }}
     env:
     - name: GEOSERVER_URL
       value: {{ printf "http://%s:8080/geoserver" $geoserverHost }}
@@ -44,7 +44,7 @@ metadata:
 spec:
   securityContext:
     # 101 = GID of curl_group
-    fsGroup: 101
+    fsGroup: {{ .Values.curl.gid }}
   volumes:
   - name: netrc
     secret:
@@ -52,21 +52,22 @@ spec:
       defaultMode: 0640
   containers:
   - name: curl
-    image: curlimages/curl:7.75.0
+    image: {{ .Values.curl.image }}
     env:
     - name: GEOSERVER_URL
       value: {{ printf "http://%s:8080/geoserver" $geoserverHost }}
     volumeMounts:
     - name: netrc
-      mountPath: /home/curl_user/.netrc
+      mountPath: /netrc
       subPath: netrc
       readOnly: true
     command:
     - curl
     args:
-    - --netrc
     - --verbose
     - --fail
+    - --netrc-file
+    - /netrc
     - --max-time
     - '5'
     - '$(GEOSERVER_URL)/rest/about/system-status.json'
