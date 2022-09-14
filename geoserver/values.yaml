@@ -21,9 +21,13 @@ image:
   repository: kartoza/geoserver
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "2.18.0"
+  tag: "2.21.0"
 
 serviceName:
+
+proxy: {}
+#  hostname: geoserver.example.net
+#  https: true
 
 persistence:
   dataDir:

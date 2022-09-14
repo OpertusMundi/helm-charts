@@ -51,6 +51,10 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: "metadata.name"
         - name: GEOSERVER_DATA_DIR 
           value: /var/lib/geoserver/data
         - name: GEOWEBCACHE_CACHE_DIR 
@@ -63,6 +67,14 @@ spec:
           value: admin
         - name: GEOSERVER_ADMIN_PASSWORD_FILE
           value: /secrets/admin-password/password
+        - name: GEOSERVER_LOG_LOCATION
+          value: "logs/geoserver-$(POD_NAME).log"
+        {{- if .Values.proxy }}
+        - name: HTTP_PROXY_NAME
+          value: {{ .Values.proxy.hostname }}
+        - name: HTTP_SCHEME
+          value: {{ .Values.proxy.https | ternary "https" "http" }}
+        {{- end }}{{/* if .Values.proxy */}}
         volumeMounts:
         - name: data
           mountPath: /var/lib/geoserver/data
