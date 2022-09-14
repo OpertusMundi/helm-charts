@@ -1,0 +1,7 @@
+{
+    "namespace": {
+        "prefix": "helloworld",
+        "uri": "urn:opertusmundi.eu:workspaces/helloworld",
+        "isolated": true
+    }
+}

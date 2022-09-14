@@ -34,6 +34,23 @@ spec:
           defaultMode: 0640
       - name: home
         emptyDir: {}
+      initContainers:
+      - name: prepare-home
+        image: {{ .Values.curl.image }}
+        command:
+        - sh
+        args:
+        - -c
+        - |-
+          cp -v /netrc ${HOME}/.netrc
+          chmod -v 0600 ${HOME}/.netrc
+        volumeMounts:
+        - name: netrc
+          mountPath: /netrc
+          subPath: netrc
+          readOnly: true
+        - name: home
+          mountPath: {{ .Values.curl.userDir }}
       containers:
       - name: curl
         image: {{ .Values.curl.image }}
@@ -41,10 +58,6 @@ spec:
         - name: GEOSERVER_URL
           value: {{ printf "http://%s:8080/geoserver" $geoserverHost }}
         volumeMounts:
-        - name: netrc
-          mountPath: /netrc
-          subPath: netrc
-          readOnly: true
         - name: home
           mountPath: {{ .Values.curl.userDir }}
         command:

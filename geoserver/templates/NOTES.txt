@@ -15,12 +15,17 @@ Define some helper variables:
 
 Get info on workspaces:
 
-    kubectl exec -i deploy/{{ $fullname }}-cli -- curl --fail --netrc-file /netrc ${geoserver_url}/rest/workspaces.json
+    kubectl exec -i deploy/{{ $fullname }}-cli -- curl -f -n ${geoserver_url}/rest/workspaces.json
 
 Create a workspace `test1`:
 
-    echo '<workspace><name>test1</name></workspace>' | 
-       kubectl exec -i deploy/{{ $fullname }}-cli -- curl --fail --netrc-file /netrc -XPOST ${geoserver_url}/rest/workspaces -H 'content-type: application/xml' -d @-
+    cat geoserver/examples/rest/post-workspace.json | jq --arg name 'test1' '.workspace.name=$name' | \
+      kubectl exec -i deploy/{{ $fullname }}-cli -- curl -v -f -n -XPOST ${geoserver_url}/rest/workspaces -H content-type:application/json -d @-
+
+Update namespace for workspace `test1`:
+
+    cat geoserver/examples/rest/put-namespace.json | jq --arg prefix 'test1' '.namespace.prefix=$prefix| .namespace.uri="urn:opertusmundi.eu:workspaces/"+$prefix' | \
+      kubectl exec -i deploy/{{ $fullname }}-cli -- curl -v -f -n -XPUT ${geoserver_url}/rest/namespaces/test1 -H content-type:application/json -d @-
 
 {{- end }}{{/*if*/}}
 
