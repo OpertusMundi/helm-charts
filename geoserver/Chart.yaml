@@ -26,4 +26,4 @@ dependencies:
 - name: postgresql-cluster
   version: "0.2.0"
   repository: "file://../postgresql-cluster"
-  condition: datastore.postgis.enabled
+  condition: geoserver.datastore.postgis.enabled

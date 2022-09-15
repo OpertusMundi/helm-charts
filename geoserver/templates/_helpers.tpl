@@ -72,12 +72,12 @@ app.kubernetes.io/component: cli
 {{- end }}
 
 {{- define "geoserver.adminPassword.secretName" -}}
-{{ .Values.adminPassword.secretName | default (printf "%s-admin-password" (include "geoserver.fullname" .)) }}
+{{ .Values.geoserver.adminPassword.secretName | default (printf "%s-admin-password" (include "geoserver.fullname" .)) }}
 {{- end }}
 
 
 {{- define "geoserver.maxHeapMemory" -}}
-{{- with .Values.resources.requests }}
+{{- with .Values.geoserver.resources.requests }}
 {{- if (hasSuffix "Mi" .memory) }}
 {{- printf "%dm" (max (div (mul (trimSuffix "Mi" .memory) 3) 4) 1024) }}
 {{- else if (hasSuffix "Gi" .memory) }}

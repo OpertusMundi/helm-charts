@@ -2,7 +2,7 @@
 
 {{- $fullname := (include "geoserver.fullname" .) -}}
 
-{{- with .Values.persistence.dataDir }}
+{{- with .Values.geoserver.persistence.dataDir }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -19,11 +19,11 @@ spec:
     matchLabels:
       {{- include "geoserver.selectorLabels" $ | nindent 6 }}  
       {{- if .extraMatchLabels }}{{ toYaml .extraMatchLabels | nindent 6 }}{{- end }}
-{{- end }}{{/* with .Values.persistence.dataDir */}}
+{{- end }}{{/* with .Values.geoserver.persistence.dataDir */}}
 
 ---
 
-{{- with .Values.persistence.geowebcacheCacheDir }}
+{{- with .Values.geoserver.persistence.geowebcacheCacheDir }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -40,5 +40,5 @@ spec:
     matchLabels:
       {{- include "geoserver.selectorLabels" $ | nindent 6 }}  
       {{- if .extraMatchLabels }}{{ toYaml .extraMatchLabels | nindent 6 }}{{- end }}
-{{- end }}{{/* with .Values.persistence.geowebcacheCacheDir */}}
+{{- end }}{{/* with .Values.geoserver.persistence.geowebcacheCacheDir */}}
 
