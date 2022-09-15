@@ -7,7 +7,6 @@
 # manifests
 
 ---
-
 {{- if .Values.curl.create }}
 apiVersion: apps/v1
 kind: Deployment
@@ -27,8 +26,8 @@ spec:
     spec:  
       securityContext:
         fsGroup: {{ .Values.curl.gid }}
-     # shareProcessNamespace because we want SIGTERM to be sent to /pause (as PID 1)
-     shareProcessNamespace: true
+      # shareProcessNamespace because we want SIGTERM to be sent to /pause (as PID 1)
+      shareProcessNamespace: true
       volumes:
       - name: netrc
         secret:
@@ -44,8 +43,7 @@ spec:
         args:
         - -c
         - |-
-          cp -v /netrc ${HOME}/.netrc
-          chmod -v 0600 ${HOME}/.netrc
+          cp -v /netrc ${HOME}/.netrc && chmod -v 0600 ${HOME}/.netrc
         volumeMounts:
         - name: netrc
           mountPath: /netrc
@@ -74,3 +72,4 @@ spec:
             memory: 64Mi
       restartPolicy: Always
 {{- end }}{{/* if .Values.curl.create */}}
+
