@@ -1,21 +1,75 @@
 # vim: set filetype=helm:
 
+{{- $fullname := (include "geoserver.fullname" .) -}}
+{{- $serviceDomain := (include "geoserver.serviceDomain" .) -}}
+
+{{- $geoserverHost := printf "%s-0.%s" $fullname $serviceDomain }}
+
+# manifests
+---
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "geoserver.fullname" . }}-test-connection"
+  name: {{ $fullname }}-test-connect-web
   labels:
     {{- include "geoserver.labels" . | nindent 4 }}
   annotations:
-    "helm.sh/hook": test
+    helm.sh/hook: test
 spec:
   containers:
-    - name: wget
-      image: busybox:1
-      command: 
-      - 'wget'
-      args:
-       - -T
-       - '5'
-       - '{{ include "geoserver.fullname" . }}-proxy:8080'
+  - name: curl
+    image: {{ .Values.curl.image }}
+    env:
+    - name: GEOSERVER_URL
+      value: {{ printf "http://%s:8080/geoserver" $geoserverHost }}
+    command: 
+    - curl
+    args:
+    - --verbose
+    - --fail
+    - --max-time
+    - '5'
+    - '$(GEOSERVER_URL)/web'
   restartPolicy: Never
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ $fullname }}-test-connect-rest
+  labels:
+    {{- include "geoserver.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: test
+spec:
+  securityContext:
+    # 101 = GID of curl_group
+    fsGroup: {{ .Values.curl.gid }}
+  volumes:
+  - name: netrc
+    secret:
+      secretName: {{ $fullname }}-admin-netrc
+      defaultMode: 0640
+  containers:
+  - name: curl
+    image: {{ .Values.curl.image }}
+    env:
+    - name: GEOSERVER_URL
+      value: {{ printf "http://%s:8080/geoserver" $geoserverHost }}
+    volumeMounts:
+    - name: netrc
+      mountPath: /netrc
+      subPath: netrc
+      readOnly: true
+    command:
+    - curl
+    args:
+    - --verbose
+    - --fail
+    - --netrc-file
+    - /netrc
+    - --max-time
+    - '5'
+    - '$(GEOSERVER_URL)/rest/about/system-status.json'
+  restartPolicy: Never
+

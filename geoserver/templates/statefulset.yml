@@ -8,32 +8,32 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "geoserver.fullname" . }}
+  name: {{ $fullname }}
   labels:
     {{- include "geoserver.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.geoserver.replicaCount }}
   serviceName: {{ $serviceName }}
   selector:
     matchLabels:
-      {{- include "geoserver.selectorLabels" . | nindent 6 }}
+      {{- include "geoserver.selectorLabelsForServer" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{- with .Values.geoserver.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "geoserver.selectorLabels" . | nindent 8 }}
+        {{- include "geoserver.selectorLabelsForServer" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
+      {{- with .Values.geoserver.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "geoserver.serviceAccountName" . }}
       securityContext:
         # change ownership to GID of geoserverusers
-        fsGroup: {{ .Values.podSecurityContext.gid }}
+        fsGroup: {{ .Values.geoserver.podSecurityContext.gid }}
         fsGroupChangePolicy: OnRootMismatch
       volumes:        
       - name: data
@@ -48,9 +48,15 @@ spec:
           defaultMode: 0640
       containers:
       - name: geoserver
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- with .Values.geoserver.image }}
+        image: "{{ .repository }}:{{ .tag | default $.Chart.AppVersion }}"
+        imagePullPolicy: {{ .pullPolicy }}
+        {{- end }}{{/* with .Values.geoserver.image */}}
         env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: "metadata.name"
         - name: GEOSERVER_DATA_DIR 
           value: /var/lib/geoserver/data
         - name: GEOWEBCACHE_CACHE_DIR 
@@ -63,6 +69,14 @@ spec:
           value: admin
         - name: GEOSERVER_ADMIN_PASSWORD_FILE
           value: /secrets/admin-password/password
+        - name: GEOSERVER_LOG_LOCATION
+          value: "logs/geoserver-$(POD_NAME).log"
+        {{- with .Values.geoserver.proxy }}
+        - name: HTTP_PROXY_NAME
+          value: {{ .hostname }}
+        - name: HTTP_SCHEME
+          value: {{ .https | ternary "https" "http" }}
+        {{- end }}{{/* with .Values.geoserver.proxy */}}
         volumeMounts:
         - name: data
           mountPath: /var/lib/geoserver/data
@@ -75,23 +89,23 @@ spec:
           containerPort: 8080
           protocol: TCP
         readinessProbe:
-          initialDelaySeconds: 15
+          initialDelaySeconds: 16
           httpGet:
             path: /geoserver/web/
             port: http-alt
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          {{- toYaml .Values.geoserver.resources | nindent 10 }}
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
-      {{- with .Values.tolerations }}
+      {{- with .Values.geoserver.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
-      {{- end }}{{/* with .Values.tolerations */}}
-      {{- with .Values.nodeSelector }}
+      {{- end }}{{/* with .Values.geoserver.tolerations */}}
+      {{- with .Values.geoserver.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
-      {{- end }}{{/* with .Values.nodeSelector */}}
-      {{- with .Values.datastore.postgis }}
+      {{- end }}{{/* with .Values.geoserver.nodeSelector */}}
+      {{- with .Values.geoserver.datastore.postgis }}
       {{- if (and .enabled .affinityPref) }}
       affinity:
         podAffinity:
@@ -102,8 +116,8 @@ spec:
               labelSelector:
                 matchLabels:
                   {{/* https://stackoverflow.com/questions/47791971/how-can-you-call-a-helm-helper-template-from-a-subchart-with-the-correct-conte */}}
-                  {{- include "postgresql-cluster.selectorLabelsForMaster" (index $.Subcharts "postgresql-cluster") | nindent 18 }}
+                  {{- include "postgresql-cluster.selectorLabelsForMaster" (get $.Subcharts "postgresql-cluster") | nindent 18 }}
       {{- end }}{{/* if enabled */}}
-      {{- end }}{{/* with .Values.datastore.postgis */}}
+      {{- end }}{{/* with .Values.geoserver.datastore.postgis */}}
       restartPolicy: Always
       terminationGracePeriodSeconds: 30

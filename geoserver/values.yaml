@@ -11,56 +11,66 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-replicaCount: 1
+geoserver:
 
-nodeSelector: {}
+  replicaCount: 1
+  
+  image:
+    repository: kartoza/geoserver
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "2.21.0"
+  imagePullSecrets: []
+  
+  # the service name that governs the statefulset (fullname if empty)
+  serviceName:
+  
+  persistence:
+    dataDir:
+      storageClassName: nfs-1
+      accessMode: ReadWriteMany
+      size: 1Gi
+      extraMatchLabels: {}
+    geowebcacheCacheDir:
+      storageClassName: nfs-1
+      accessMode: ReadWriteMany
+      size: 4Gi
+      extraMatchLabels: {}
+  
+  nodeSelector: {}
+  tolerations: []
+  podAnnotations: {}
+  
+  proxy: {}
+  #  hostname: geoserver.example.net
+  #  https: true
+  
+  adminPassword:
+    secretName:
+ 
+  podSecurityContext:
+    gid: 10001
 
-tolerations: []
+  resources:
+    limits:
+      cpu: 2500m
+      memory: 3072Mi
+    requests:
+      cpu: 1500m
+      memory: 2048Mi
 
-image:
-  repository: kartoza/geoserver
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: "2.18.0"
+  datastore:
+    postgis:
+      enabled: true
+      affinityPref: true
 
-serviceName:
-
-persistence:
-  dataDir:
-    storageClassName: nfs-1
-    accessMode: ReadWriteMany
-    size: 1Gi
-    extraMatchLabels: {}
-  geowebcacheCacheDir:
-    storageClassName: nfs-1
-    accessMode: ReadWriteMany
-    size: 4Gi
-    extraMatchLabels: {}
-
-
-adminPassword:
-  secretName:
-
-imagePullSecrets: []
-
-podAnnotations: {}
-
-podSecurityContext:
-  gid: 10001
-
-resources:
-  limits:
-    cpu: 2500m
-    memory: 3072Mi
-  requests:
-    cpu: 1500m
-    memory: 2048Mi
-
-datastore:
-  postgis:
-    enabled: true
-    affinityPref: true
-
+# Create a command-line Pod with curl
+curl:
+  create: true
+  image: 'curlimages/curl:7.75.0'
+  userDir: /home/curl_user
+  userName: curl_user
+  gid: 101
 
 #
 # Subchart "postgresql-cluster"
