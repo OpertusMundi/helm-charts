@@ -19,13 +19,13 @@ Get info on workspaces:
 
 Create a workspace `test1`:
 
-    cat geoserver/examples/rest/post-workspace.json | jq --arg name 'test1' '.workspace.name=$name' | \
-      kubectl exec -i deploy/{{ $fullname }}-cli -- curl -v -f -n -XPOST ${geoserver_url}/rest/workspaces -H content-type:application/json -d @-
+    jq -n --arg name test1 -f geoserver/examples/rest/post-workspace.jq | \
+        kubectl exec -i deploy/{{ $fullname }}-cli -- curl -v -f -n -XPOST ${geoserver_url}/rest/workspaces -H content-type:application/json -d @-
 
 Update namespace for workspace `test1`:
 
-    cat geoserver/examples/rest/put-namespace.json | jq --arg prefix 'test1' '.namespace.prefix=$prefix| .namespace.uri="urn:opertusmundi.eu:workspaces/"+$prefix' | \
-      kubectl exec -i deploy/{{ $fullname }}-cli -- curl -v -f -n -XPUT ${geoserver_url}/rest/namespaces/test1 -H content-type:application/json -d @-
+    jq -n --arg prefix test1 -f geoserver/examples/rest/put-namespace.jq | \
+        kubectl exec -i deploy/{{ $fullname }}-cli -- curl -v -f -n -XPUT ${geoserver_url}/rest/namespaces/test1 -H content-type:application/json -d @-
 
 {{- end }}{{/*if*/}}
 

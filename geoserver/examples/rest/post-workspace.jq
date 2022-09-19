@@ -1,5 +1,5 @@
 {
     "workspace": { 
-        "name": "helloworld" 
+        "name": $name 
     }
 }

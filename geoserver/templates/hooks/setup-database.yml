@@ -1,0 +1,79 @@
+# vim: set filetype=helm:
+
+{{- $fullname := (include "geoserver.fullname" .) -}}
+
+{{- $postgresFullname := (include "postgresql-cluster.fullname" (get .Subcharts "postgresql-cluster")) -}}
+{{- $postgresServiceDomain := (include "postgresql-cluster.postgres.serviceDomain" (get .Subcharts "postgresql-cluster")) -}}
+{{- $pghost := printf "%s-master-0.%s" $postgresFullname $postgresServiceDomain -}}
+
+# manifests
+---
+{{ if (and .Values.geoserver.datastore.postgis.enabled .Values.geoserver.datastore.postgis.setupDatabase) }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ $fullname }}-setup-database
+  labels:
+    {{- include "geoserver.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      {{- with (get .Values "postgresql-cluster").postgres.securityContext }}
+      securityContext:
+         runAsUser: {{ .uid }}
+         runAsGroup: {{ .gid }}
+         fsGroup: {{ .gid }}
+      {{- end }}
+      volumes:
+      - name: home
+        emptyDir: {}
+      - name: pgpass
+        secret:
+          secretName: {{ $postgresFullname }}-pgpass
+          defaultMode: 0640
+      - name: scripts
+        configMap:
+          name: {{ $fullname }}-scripts
+          defaultMode: 0774
+          items:
+          - key: setup-database.sh
+            path: setup-database.sh
+      initContainers:
+      - name: prepare-home
+        image: {{ (get .Values "postgresql-cluster").postgres.image }}
+        command:
+        - bash
+        - -c
+        - |-
+          cp /pgpass ~/.pgpass && chmod 0600 ~/.pgpass
+        volumeMounts:
+        - name: home
+          mountPath: /var/lib/postgresql
+        - name: pgpass
+          mountPath: /pgpass
+          subPath: pgpass
+          readOnly: true
+      containers:
+      - name: setup-database
+        image: {{ (get .Values "postgresql-cluster").postgres.image }}
+        env:
+        - name: PGHOST
+          value: {{ $pghost }}
+        - name: PGUSER
+          value: postgres
+        - name: PGDATABASE
+          value: {{ .Values.geoserver.datastore.postgis.databaseName }}
+        - name: POSTGIS_USER
+          value: {{ .Values.geoserver.datastore.postgis.databaseUser }} 
+        command:
+        - /opt/setup-database.sh
+        volumeMounts:
+        - name: home
+          mountPath: /var/lib/postgresql
+        - name: scripts
+          mountPath: /opt
+      restartPolicy: Never
+{{- end }}{{/* if */}}
