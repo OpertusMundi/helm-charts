@@ -1,0 +1,9 @@
+# vim: set filetype=helm:
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "geoserver.fullname" . }}-scripts
+data:
+  {{- (.Files.Glob "files/scripts/*.sh").AsConfig | nindent 2 }}
+

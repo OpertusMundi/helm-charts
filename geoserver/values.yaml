@@ -62,7 +62,13 @@ geoserver:
   datastore:
     postgis:
       enabled: true
+      # do we want to co-locate geoserver Pod with master database Pod?
       affinityPref: true
+      # do we need to setup the PostGis database (with a post-install hook)?
+      setupDatabase: true
+      databaseName: geodata
+      databaseUser: geodata
+
 
 # Create a command-line Pod with curl
 curl:
