@@ -1,3 +1,4 @@
+# POST ${geoserver_url}/rest/workspaces/${workspace}/datastores
 {
   "dataStore": {
     "name": $name,

@@ -1,3 +1,4 @@
+# PUT ${geoserver_url}/rest/namespaces/${workspace}
 {
     "namespace": {
         "prefix": $prefix,
