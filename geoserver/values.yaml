@@ -41,9 +41,11 @@ geoserver:
   tolerations: []
   podAnnotations: {}
   
+  # see https://github.com/kartoza/docker-geoserver#proxy-base-url
   proxy: {}
   #  hostname: geoserver.example.net
   #  https: true
+  #  port: 443
   
   adminPassword:
     secretName:

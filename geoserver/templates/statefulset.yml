@@ -76,6 +76,8 @@ spec:
           value: {{ .hostname }}
         - name: HTTP_SCHEME
           value: {{ .https | ternary "https" "http" }}
+        - name: HTTP_PROXY_PORT
+          value: {{ .port | quote }}
         {{- end }}{{/* with .Values.geoserver.proxy */}}
         volumeMounts:
         - name: data
