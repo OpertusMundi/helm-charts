@@ -24,7 +24,10 @@ geoserver:
   
   # the service name that governs the statefulset (fullname if empty)
   serviceName:
-  
+ 
+  service:
+    type: ClusterIP
+
   persistence:
     dataDir:
       storageClassName: nfs-1
