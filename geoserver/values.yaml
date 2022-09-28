@@ -28,6 +28,8 @@ geoserver:
   service:
     type: ClusterIP
 
+  hostAliases: []
+
   persistence:
     dataDir:
       storageClassName: nfs-1
