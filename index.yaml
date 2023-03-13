@@ -3,7 +3,7 @@ entries:
   geoserver:
   - apiVersion: v2
     appVersion: 2.21.0
-    created: "2022-09-21T02:01:20.841772497+03:00"
+    created: "2023-03-13T21:54:14.598590495+02:00"
     dependencies:
     - condition: geoserver.datastore.postgis.enabled
       name: postgresql-cluster
@@ -18,8 +18,18 @@ entries:
     version: 0.2.0
   postgresql-cluster:
   - apiVersion: v2
+    appVersion: "15"
+    created: "2023-03-13T21:54:14.60213746+02:00"
+    description: A Helm chart for a PostgreSQL master/standby cluster
+    digest: 4ac7e29ce3edcc3bdeb6ab1f755ffd986520a9d838ede5d0f9e55c86c492c16e
+    name: postgresql-cluster
+    type: application
+    urls:
+    - postgresql-cluster-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
     appVersion: "10"
-    created: "2022-09-21T02:01:20.844432335+03:00"
+    created: "2023-03-13T21:54:14.601174138+02:00"
     description: A Helm chart for a PostgreSQL master/standby cluster
     digest: e6af803f641fba211581d2e1ec4309d8c813e5e227aeb677e10cfd6fc882a076
     name: postgresql-cluster
@@ -29,7 +39,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: "10"
-    created: "2022-09-21T02:01:20.843559458+03:00"
+    created: "2023-03-13T21:54:14.599930332+02:00"
     description: A Helm chart for a PostgreSQL master/standby cluster
     digest: ade9b03ebf6a9d1400ff255673988453c585ebdbf13d042a49e6d74d7966c4b6
     name: postgresql-cluster
@@ -40,7 +50,7 @@ entries:
   registry:
   - apiVersion: v2
     appVersion: "2.7"
-    created: "2022-09-21T02:01:20.844680691+03:00"
+    created: "2023-03-13T21:54:14.602373524+02:00"
     description: A Helm chart for setting up a Docker registry
     digest: c65ae6833f60260e6a631450b7e43acd2bffc979cbe7a13a369a09dcb84301e5
     name: registry
@@ -48,4 +58,4 @@ entries:
     urls:
     - registry-0.1.0.tgz
     version: 0.1.0
-generated: "2022-09-21T02:01:20.840400393+03:00"
+generated: "2023-03-13T21:54:14.597172017+02:00"
