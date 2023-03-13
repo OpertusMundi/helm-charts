@@ -1,5 +1,6 @@
 # vim: set filetype=helm:
 
+{{/* a headless service that governs Geoserver statefulset */}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -15,8 +16,10 @@ spec:
       protocol: TCP
       name: http-alt
   selector:
-    {{- include "geoserver.selectorLabels" . | nindent 4 }}
+    {{- include "geoserver.selectorLabelsForServer" . | nindent 4 }}
 
+
+{{/* a service that exposes all members of Geoserver statefulset */}}
 ---
 apiVersion: v1
 kind: Service
@@ -25,11 +28,11 @@ metadata:
   labels:
     {{- include "geoserver.labels" . | nindent 4 }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.geoserver.service.type | default "ClusterIP" }}
   ports:
     - port: 8080
       targetPort: 8080
       protocol: TCP
       name: http-alt
   selector:
-    {{- include "geoserver.selectorLabels" . | nindent 4 }}
+    {{- include "geoserver.selectorLabelsForServer" . | nindent 4 }}

@@ -24,7 +24,12 @@ geoserver:
   
   # the service name that governs the statefulset (fullname if empty)
   serviceName:
-  
+ 
+  service:
+    type: ClusterIP
+
+  hostAliases: []
+
   persistence:
     dataDir:
       storageClassName: nfs-1
@@ -41,9 +46,11 @@ geoserver:
   tolerations: []
   podAnnotations: {}
   
+  # see https://github.com/kartoza/docker-geoserver#proxy-base-url
   proxy: {}
   #  hostname: geoserver.example.net
   #  https: true
+  #  port: 443
   
   adminPassword:
     secretName:

@@ -46,6 +46,9 @@ spec:
         secret:
           secretName: {{ include "geoserver.adminPassword.secretName" . }}
           defaultMode: 0640
+      {{- with .Values.geoserver.hostAliases }}
+      hostAliases: {{- toYaml . | nindent 6 }}
+      {{- end }}
       containers:
       - name: geoserver
         {{- with .Values.geoserver.image }}
@@ -76,6 +79,8 @@ spec:
           value: {{ .hostname }}
         - name: HTTP_SCHEME
           value: {{ .https | ternary "https" "http" }}
+        - name: HTTP_PROXY_PORT
+          value: {{ .port | quote }}
         {{- end }}{{/* with .Values.geoserver.proxy */}}
         volumeMounts:
         - name: data
