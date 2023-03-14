@@ -3,7 +3,7 @@ entries:
   geoserver:
   - apiVersion: v2
     appVersion: 2.21.0
-    created: "2023-03-14T00:31:29.029236121+02:00"
+    created: "2023-03-14T11:49:29.383612066+02:00"
     dependencies:
     - condition: geoserver.datastore.postgis.enabled
       name: postgresql-cluster
@@ -19,7 +19,17 @@ entries:
   postgresql-cluster:
   - apiVersion: v2
     appVersion: "15"
-    created: "2023-03-14T00:31:29.032737686+02:00"
+    created: "2023-03-14T11:49:29.387899604+02:00"
+    description: A Helm chart for a PostgreSQL master/standby cluster
+    digest: d8ec8b8d4f90a86f74f1de9775dd5c688b9dcb08a67db7dbab728bd48d67525f
+    name: postgresql-cluster
+    type: application
+    urls:
+    - postgresql-cluster-0.3.2.tgz
+    version: 0.3.2
+  - apiVersion: v2
+    appVersion: "15"
+    created: "2023-03-14T11:49:29.386980746+02:00"
     description: A Helm chart for a PostgreSQL master/standby cluster
     digest: 9a718d167e753c72c3dc1976f117c8e3d095bc54d983ebea8b655e143d1323a1
     name: postgresql-cluster
@@ -29,7 +39,7 @@ entries:
     version: 0.3.1
   - apiVersion: v2
     appVersion: "15"
-    created: "2023-03-14T00:31:29.031819831+02:00"
+    created: "2023-03-14T11:49:29.386078022+02:00"
     description: A Helm chart for a PostgreSQL master/standby cluster
     digest: 4ac7e29ce3edcc3bdeb6ab1f755ffd986520a9d838ede5d0f9e55c86c492c16e
     name: postgresql-cluster
@@ -39,7 +49,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: "10"
-    created: "2023-03-14T00:31:29.030863703+02:00"
+    created: "2023-03-14T11:49:29.384373847+02:00"
     description: A Helm chart for a PostgreSQL master/standby cluster
     digest: e6af803f641fba211581d2e1ec4309d8c813e5e227aeb677e10cfd6fc882a076
     name: postgresql-cluster
@@ -50,7 +60,7 @@ entries:
   registry:
   - apiVersion: v2
     appVersion: "2.7"
-    created: "2023-03-14T00:31:29.032976683+02:00"
+    created: "2023-03-14T11:49:29.388122893+02:00"
     description: A Helm chart for setting up a Docker registry
     digest: c65ae6833f60260e6a631450b7e43acd2bffc979cbe7a13a369a09dcb84301e5
     name: registry
@@ -58,4 +68,4 @@ entries:
     urls:
     - registry-0.1.0.tgz
     version: 0.1.0
-generated: "2023-03-14T00:31:29.027905784+02:00"
+generated: "2023-03-14T11:49:29.382272193+02:00"
