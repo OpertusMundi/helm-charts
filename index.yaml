@@ -3,7 +3,17 @@ entries:
   busybox:
   - apiVersion: v2
     appVersion: "1"
-    created: "2023-05-27T14:33:53.235064562+03:00"
+    created: "2023-05-30T13:43:41.971612298+03:00"
+    description: A Helm chart for Kubernetes
+    digest: 7ff3bfe4f65bed71fbecd46458fe2856da6b80cf750c40b471d44c3070ad3546
+    name: busybox
+    type: application
+    urls:
+    - busybox-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: "1"
+    created: "2023-05-30T13:43:41.97142205+03:00"
     description: A Helm chart for Kubernetes
     digest: 663121769903c9d5c57659006357e72b2056c26eb821bca2ee349b414c5d6887
     name: busybox
@@ -14,7 +24,7 @@ entries:
   geoserver:
   - apiVersion: v2
     appVersion: 2.21.0
-    created: "2023-05-27T14:33:53.236318773+03:00"
+    created: "2023-05-30T13:43:41.972875031+03:00"
     dependencies:
     - condition: geoserver.datastore.postgis.enabled
       name: postgresql-cluster
@@ -30,7 +40,7 @@ entries:
   postgresql-cluster:
   - apiVersion: v2
     appVersion: "15"
-    created: "2023-05-27T14:33:53.240969017+03:00"
+    created: "2023-05-30T13:43:41.977453834+03:00"
     description: A Helm chart for a PostgreSQL master/standby cluster
     digest: d8ec8b8d4f90a86f74f1de9775dd5c688b9dcb08a67db7dbab728bd48d67525f
     name: postgresql-cluster
@@ -40,7 +50,7 @@ entries:
     version: 0.3.2
   - apiVersion: v2
     appVersion: "15"
-    created: "2023-05-27T14:33:53.240025182+03:00"
+    created: "2023-05-30T13:43:41.976471654+03:00"
     description: A Helm chart for a PostgreSQL master/standby cluster
     digest: 9a718d167e753c72c3dc1976f117c8e3d095bc54d983ebea8b655e143d1323a1
     name: postgresql-cluster
@@ -50,7 +60,7 @@ entries:
     version: 0.3.1
   - apiVersion: v2
     appVersion: "15"
-    created: "2023-05-27T14:33:53.239135683+03:00"
+    created: "2023-05-30T13:43:41.974555555+03:00"
     description: A Helm chart for a PostgreSQL master/standby cluster
     digest: 4ac7e29ce3edcc3bdeb6ab1f755ffd986520a9d838ede5d0f9e55c86c492c16e
     name: postgresql-cluster
@@ -60,7 +70,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: "10"
-    created: "2023-05-27T14:33:53.23822593+03:00"
+    created: "2023-05-30T13:43:41.973667032+03:00"
     description: A Helm chart for a PostgreSQL master/standby cluster
     digest: e6af803f641fba211581d2e1ec4309d8c813e5e227aeb677e10cfd6fc882a076
     name: postgresql-cluster
@@ -71,7 +81,7 @@ entries:
   registry:
   - apiVersion: v2
     appVersion: "2.7"
-    created: "2023-05-27T14:33:53.241207944+03:00"
+    created: "2023-05-30T13:43:41.977702748+03:00"
     description: A Helm chart for setting up a Docker registry
     digest: c65ae6833f60260e6a631450b7e43acd2bffc979cbe7a13a369a09dcb84301e5
     name: registry
@@ -79,4 +89,4 @@ entries:
     urls:
     - registry-0.1.0.tgz
     version: 0.1.0
-generated: "2023-05-27T14:33:53.234779191+03:00"
+generated: "2023-05-30T13:43:41.971145338+03:00"
