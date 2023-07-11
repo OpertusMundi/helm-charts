@@ -89,9 +89,10 @@ ingressAdmin:
   tls:
     secretName:
   clientAuth:
+    # max verification depth
     verifyDepth: 1
     certificateAuthority:
-      # An
+      # An opaque secret with a `ca.crt` entry containing the authority certificate
       secretName:
 
 nodeSelector: {}
