@@ -3,6 +3,8 @@ run-name: Run continuous-integration tasks for PgPool
 
 on: 
   push:
+    paths:
+    - 'postgresql-cluster'
     branches:
     - 'pgpool*'
     tags:
