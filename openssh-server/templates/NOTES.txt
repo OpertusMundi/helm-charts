@@ -1,0 +1,9 @@
+Port-forward to the SSH server, e.g:
+
+    kubectl port-forward -n {{ .Release.Namespace }} deploy/{{ include "openssh-server.fullname" . }} 2222:2222
+
+From another terminal, login to the container:
+
+    ssh -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UpdateHostKeys=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -p 2222 -i id_rsa-1 user1@{{ .Release.Name }}.localhost
+
+
