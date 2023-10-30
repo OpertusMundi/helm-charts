@@ -34,7 +34,7 @@ jobs:
       with:
         context: ./openssh-server/docker/
         file: ./openssh-server/docker/debian.dockerfile
-        build-args:
+        buildArgs:
           uid: '1000'
         push: true
         tags: |
