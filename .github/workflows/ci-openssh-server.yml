@@ -33,7 +33,7 @@ jobs:
     - uses: docker/build-push-action@v4
       with:
         context: ./openssh-server/docker/
-        file: ./openssh-server/docker/debian.dockerfile
+        file: ./openssh-server/docker/Dockerfile
         buildArgs:
           uid: '1000'
         push: true
