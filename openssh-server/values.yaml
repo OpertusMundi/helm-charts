@@ -8,7 +8,9 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-dataPvcName: data-pvc
+data:
+  pvcName: data-pvc
+  readOnly: true
 
 hostKey:
   secretName:

@@ -37,7 +37,7 @@ spec:
           defaultMode: 0640
       - name: data
         persistentVolumeClaim:
-          claimName: {{ .Values.dataPvcName }}
+          claimName: {{ .Values.data.pvcName }}
       - name: home
         emptyDir: {}
       initContainers:
@@ -88,7 +88,7 @@ spec:
           mountPath: /home
         - name: data
           mountPath: /data
-          readOnly: true
+          readOnly: {{ .Values.data.readOnly }}
         ports:
         - name: ssh
           containerPort: 2222
