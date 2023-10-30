@@ -5,6 +5,7 @@ on:
   push:
     paths:
     - 'openssh-server/**'
+    - '.github/workflows/ci-openssh-server.yml'
     branches:
     - 'openssh-server'
     tags:
@@ -34,8 +35,8 @@ jobs:
       with:
         context: ./openssh-server/docker/
         file: ./openssh-server/docker/Dockerfile
-        buildArgs:
-          uid: '1000'
+        buildArgs: |-
+          uid=1000
         push: true
         tags: |
           ghcr.io/opertusmundi/openssh-server:8-debian
