@@ -1,0 +1,53 @@
+
+image:
+  repository: docker-registry.ebrains.eu/tc/openssh-server 
+  pullPolicy: IfNotPresent
+  tag: "8-debian-u1000"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+data:
+  pvcName: data-pvc
+  readOnly: true
+
+hostKey:
+  secretName:
+
+auth:
+  secretName:
+
+podAnnotations: {}
+
+podSecurityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
+  fsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+
+service:
+  enabled: false
+  type: ClusterIP
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
