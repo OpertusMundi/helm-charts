@@ -4,7 +4,7 @@ run-name: Run continuous-integration tasks for OpenSSH server
 on: 
   push:
     paths:
-    - 'openssh-server'
+    - 'openssh-server/**'
     branches:
     - 'openssh-server'
     tags:
