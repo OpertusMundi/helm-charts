@@ -1,0 +1,45 @@
+name: CI - gnupg
+run-name: Build container image with GnuPG suite
+
+on: 
+  push:
+    paths:
+    - 'gnupg/**'
+    - '.github/workflows/ci-gnupg.yml'
+    branches:
+    - 'gnupg'
+    tags:
+    - '0.*'
+    - '1.*'
+
+jobs:
+
+  build_image:
+    runs-on: ubuntu-20.04
+    env:
+      {}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - uses: docker/metadata-action@v4
+      id: meta
+      with:
+        images: |
+          ghcr.io/opertusmundi/gnupg
+    - uses: docker/setup-buildx-action@v2
+    - uses: docker/build-push-action@v4
+      with:
+        context: ./gnupg/docker/
+        file: ./gnupg/docker/Dockerfile
+        #buildArgs: |-
+        push: true
+        tags: |
+          ghcr.io/opertusmundi/gnupg:2-debian
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
