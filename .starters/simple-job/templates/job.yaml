@@ -32,6 +32,8 @@ spec:
       - name: "<CHARTNAME>"
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
         command: {{- (get .Values "<CHARTNAME>").command | toYaml | nindent 8 }}
         env:
           []
