@@ -2,7 +2,7 @@
 
 {{- $fullname := (include "keycloak.fullname" .) -}}
 {{- $serviceName := (include "keycloak.serviceName" .) -}}
-{{- $serviceDomain := (printf "%s.svc.cluster.local." .Release.Namespace) -}}
+{{- $serviceDomain := (include "keycloak.serviceDomain" .) -}}
 {{- $serviceFQName := (printf "%s.%s" $serviceName $serviceDomain) }}
 {{- $javaMaxHeapInMegabytes := (mulf (.Values.keycloak.resources.limits.memory | trimSuffix "Mi") 0.75 | ceil) -}}
 
@@ -43,7 +43,7 @@ spec:
           name: {{ .quarkusConfig.configMapName | default (printf "%s-quarkus-config-generated" $fullname) }}
       - name: tls
         secret:
-          secretName: {{ .tls.secretName | default (printf "%s-tls" $fullname) }}
+          secretName: {{ .tls.secretName | default (printf "%s-internal-tls" $serviceName) }}
           defaultMode: 0640
       containers:
       - name: keycloak

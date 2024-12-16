@@ -64,3 +64,13 @@ Create the name of the service account to use
 {{- define "keycloak.serviceName" -}}
 {{ .Values.serviceName | default (include "keycloak.fullname" .) }}
 {{- end }}
+
+{{- define "keycloak.serviceDomain" -}}
+{{ printf "%s.svc.cluster.local." .Release.Namespace }}
+{{- end }}
+
+{{- define "keycloak.hookLabels" -}}
+app.kubernetes.io/name: {{ include "keycloak.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
