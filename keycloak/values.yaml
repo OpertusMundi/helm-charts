@@ -31,7 +31,10 @@ keycloak:
   optimized: false
   # TLS configuration
   tls:
-    secretName:
+    #secretName:
+    ## or ...
+    #issuerName:
+    #issuerKind:
   # configuration for Quarkus
   quarkusConfig:
     configMapName:
@@ -54,11 +57,11 @@ keycloak:
     initialDelaySeconds: 20
   resources:
     requests:
-      cpu: 1.5
+      cpu: 500m
       memory: 1024Mi
     limits:
-      cpu: 2.0
-      memory: 1536Mi
+      cpu: 1500m
+      memory: 2048Mi
 
 netpol:
   enabled: false

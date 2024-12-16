@@ -1,6 +1,6 @@
 # vim:set syntax=dockerfile:
 
-FROM quay.io/keycloak/keycloak:21.1.2
+FROM quay.io/keycloak/keycloak:22.0
 
 ARG kc_cache_stack="udp"
 
