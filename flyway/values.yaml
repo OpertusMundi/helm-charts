@@ -10,22 +10,18 @@ serviceAccount:
 
 podAnnotations: {}
 
+jobAnnotations: {}
+jobBackoffLimit: 1
+
 podSecurityContext:
   fsGroup: 1000
-
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+  runAsUser: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
 
 resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   # limits:
   #   cpu: 100m
   #   memory: 128Mi
@@ -41,11 +37,15 @@ checkout:
   image: 
     repository: bitnami/git
     pullPolicy: IfNotPresent
-    tag: 2.30.1
+    tag: 2.35.3
   securityContext:
-    # uid of bitnami user
+    # uid/gid of bitnami user
     runAsUser: 1000
     runAsGroup: 1000
+    runAsNonRoot: true
+    capabilities:
+      drop: [ 'ALL' ]
+    allowPrivilegeEscalation: false  
   # home of bitnami user
   homeDir: /home/bitnami
   # name of the secret holding the SSH key (as "ssh-privatekey") for the Git repository
@@ -60,11 +60,22 @@ checkout:
     branch: master
     path: src/main/resources/db/migration
 
+# mimic this feature (not available in community edition): 
+# https://documentation.red-gate.com/fd/flyway-ignore-migration-patterns-setting-277579002.html
+ignoreRepeatableMigrations: false
+
 flyway:
   image:
     repository: flyway/flyway
     pullPolicy: IfNotPresent
     tag: "9.15"
+  securityContext:
+    capabilities:
+      drop: [ 'ALL' ]
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    #runAsUser: 1000
+    #runAsNonRoot: true
   # Flyway subcommand to execute (info, migrate, validate)   
   command: "info"
   # Flyway configuration
@@ -78,6 +89,8 @@ flyway:
     jdbc:postgresql://postgres.default.svc.cluster.local/helloworld?
   # database user
   user: postgres
-  # name of the secret holding the password (as "password") for the database user
+  # ref to secret key holding the password for the database user
   password:
-    secretName: postgres-password
+    secretKeyRef:
+      name: postgres-password
+      key: password
