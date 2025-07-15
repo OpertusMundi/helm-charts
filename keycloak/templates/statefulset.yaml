@@ -68,8 +68,12 @@ spec:
           value: /certs/tls.crt
         - name: KC_HTTPS_CERTIFICATE_KEY_FILE
           value: /certs/tls.key
-        - name: KC_PROXY
-          value: 'edge'
+        - name: KC_PROXY_HEADERS
+          value: xforwarded
+        {{- with .proxyTrustedAddresses }}
+        - name: KC_PROXY_TRUSTED_ADDRESSES
+          value: {{ . | quote }}
+        {{- end }}{{/* with .proxyTrustedAddresses */}}
         # https://www.keycloak.org/server/reverseproxy
         - name: KC_SPI_STICKY_SESSION_ENCODER_INFINISPAN_SHOULD_ATTACH_ROUTE
           value: 'false'
