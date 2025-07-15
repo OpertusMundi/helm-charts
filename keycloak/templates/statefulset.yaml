@@ -20,6 +20,20 @@ spec:
   selector:
     matchLabels:
       {{- include "keycloak.selectorLabels" . | nindent 6 }}
+  
+  volumeClaimTemplates:
+  {{- with .Values.keycloak.data }}
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ .size }}
+      storageClassName: {{ .storageClassName }}
+      volumeMode: Filesystem
+  {{- end }}{{/* with .Values.keycloak.data */}}    
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -130,6 +144,8 @@ spec:
           value: {{ $e.value | quote }}
         {{- end }}{{/* range .extraEnv */}}
         volumeMounts:
+        - name: data
+          mountPath: /opt/keycloak/data
         - name: quarkus-config
           mountPath: /opt/keycloak/conf/quarkus.properties
           subPath: quarkus.properties
