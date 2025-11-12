@@ -59,12 +59,12 @@ spec:
         secret:
           secretName: {{ .tls.secretName | default (printf "%s-internal-tls" $serviceName) }}
           defaultMode: 0640
-      {{- with .Values.keycloak.extraVolumes }}
+      {{- with .extraVolumes }}
         {{- toYaml . | nindent 6 }}
-      {{- end }}{{/* with .Values.keycloak.extraVolumes */}}
-      {{- with .Values.keycloak.initContainers }}
+      {{- end }}{{/* with .extraVolumes */}}
+      {{- with .initContainers }}
         {{- toYaml . | nindent 6 }}
-      {{- end }}{{/* with .Values.keycloak.initContainers */}}
+      {{- end }}{{/* with .initContainers */}}
       containers:
       - name: keycloak
         image: "{{ .image.repository }}:{{ .image.tag }}"
@@ -159,9 +159,9 @@ spec:
         - name: tls
           mountPath: /certs
           readOnly: true
-        {{- with .Values.keycloak.extraVolumeMounts }}
+        {{- with .extraVolumeMounts }}
           {{- toYaml . | nindent 8 }}
-        {{- end }}{{/* with .Values.keycloak.extraVolumeMounts */}}
+        {{- end }}{{/* with .extraVolumeMounts */}}
         ports:
         - name: http-alt
           containerPort: 8080
