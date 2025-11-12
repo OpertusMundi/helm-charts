@@ -63,6 +63,7 @@ spec:
         {{- toYaml . | nindent 6 }}
       {{- end }}{{/* with .extraVolumes */}}
       {{- with .initContainers }}
+      initContainers:
         {{- toYaml . | nindent 6 }}
       {{- end }}{{/* with .initContainers */}}
       containers:
