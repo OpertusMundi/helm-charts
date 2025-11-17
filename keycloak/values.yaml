@@ -72,28 +72,10 @@ keycloak:
       memory: 2048Mi
   extraVolumes:
     []
-  #- name: themes
-  #  emptyDir: {}
   extraVolumeMounts:
     []
-  #- name: themes
-  #  mountPath: /opt/keycloak/themes
-  #  readOnly: true
-  initContainers:
+  extraInitContainers:
     []
-  #- name: download-theme
-  #  image: busybox:1
-  #  workingDir: /opt/keycloak/themes
-  #  command:
-  #  - sh
-  #  - -c
-  #  - |-
-  #    wget https://github.com/OpertusMundi/keycloak-theme/archive/refs/heads/main.tar.gz -qO- | tar xzv --strip-components=1
-  #  volumeMounts:
-  #  - name: themes
-  #    mountPath: /opt/keycloak/themes
-
-
 
 netpol:
   enabled: false
