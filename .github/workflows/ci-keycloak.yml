@@ -38,7 +38,7 @@ jobs:
         driver: docker
     - uses: docker/bake-action@v6
       with:
-        workdir: ./charts/keycloak/keycloak
+        workdir: ./keycloak/keycloak
         source: .
         files: docker-bake.hcl
         targets: >-
