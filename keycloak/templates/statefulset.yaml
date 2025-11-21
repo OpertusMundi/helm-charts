@@ -52,7 +52,7 @@ spec:
       serviceAccountName: {{ include "keycloak.serviceAccountName" . }}
       securityContext:
         {{- toYaml $podSecurityContext | nindent 8 }}
-      
+
       volumes:
       {{- with .Values.keycloak }}
       - name: quarkus-config
