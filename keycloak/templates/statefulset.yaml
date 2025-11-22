@@ -52,7 +52,7 @@ spec:
       serviceAccountName: {{ include "keycloak.serviceAccountName" . }}
       securityContext:
         {{- toYaml $podSecurityContext | nindent 8 }}
-      
+
       volumes:
       {{- with .Values.keycloak }}
       - name: quarkus-config
@@ -116,15 +116,14 @@ spec:
         securityContext:
           {{- toYaml $securityContext | nindent 10 }}
         env:
-        - name: KC_FEATURES
-          value: >-
-            token-exchange,admin-fine-grained-authz
-        - name: KC_HOSTNAME
-          value: {{ .hostname | quote }}
-        - name: KC_HOSTNAME_STRICT_BACKCHANNEL
+        - name: KC_HOSTNAME_STRICT
+          value: 'false'
+        - name: KC_HOSTNAME_BACKCHANNEL_DYNAMIC
           value: 'true'
+        - name: KC_HOSTNAME
+          value: {{ printf "https://%s" .hostname }}
         - name: KC_HOSTNAME_ADMIN
-          value: {{ .hostnameAdmin | quote }}
+          value: {{ printf "https://%s" .hostnameAdmin }}
         - name: KC_HTTPS_CERTIFICATE_FILE
           value: /certs/tls.crt
         - name: KC_HTTPS_CERTIFICATE_KEY_FILE
@@ -213,12 +212,15 @@ spec:
           containerPort: 8080
         - name: https-alt
           containerPort: 8443
+        - name: management
+          containerPort: 9000
         resources:
           {{- toYaml .resources | nindent 10 }}
         readinessProbe:
           httpGet:
             path: /health/ready
-            port: 8080
+            port: management
+            scheme: HTTPS
           failureThreshold: {{ .readinessProbe.failureThreshold }}
           periodSeconds: {{ .readinessProbe.periodSeconds }}
           initialDelaySeconds: {{ .readinessProbe.initialDelaySeconds }}
